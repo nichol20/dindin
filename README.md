@@ -29,17 +29,7 @@ O sistema trata-se de uma aplicação para controle de finanças pessoais. As fu
 > - As funcionalidades que estão `*` são obrigatórias
 > - As funcionalidades que estão marcadas com `Extra`, não são obrigatórias, mas valem pontos para aumentar seu desempenho na avaliação final
 
-## Como entregar?
-
-- [ ] Faça o fork desse repositório para o seu GitHub
-- [ ] Clone o seu repositório em sua máquina
-- [ ] Desenvolva seu projeto, fazendo commits a cada alteração e push
-- [ ] Crie um PR (pull request)
-- [ ] Envie o link do pull request que você criou na plataforma da Cubos
-
-### ⚠️ Importante: Se o pull request não for criado e enviado na plataforma o feedback não será fornecido e constará como não entregue
-
-# Caso tenha problema em abrir o arquivo pelo figma, utilize pelo [penpot](https://design.penpot.app/#/view/82999118-5f89-808f-8004-b4cb8d4d3a5b?page-id=82999118-5f89-808f-8004-b4cb8e3b73e9&section=inspect&index=0&interactions-mode=show&share-id=ad45735f-43aa-8114-8004-b4d698eb0e7f)
+# Caso tenha problema em abrir o arquivo pelo [figma](https://www.figma.com/file/BwOAJkF8OeMON36TyFdhkj/DinDin-2.0?node-id=0%3A1), utilize pelo [penpot](https://design.penpot.app/#/view/82999118-5f89-808f-8004-b4cb8d4d3a5b?page-id=82999118-5f89-808f-8004-b4cb8e3b73e9&section=inspect&index=0&interactions-mode=show&share-id=ad45735f-43aa-8114-8004-b4d698eb0e7f)
 
 ## Detalhamento de Requisitos:
 
@@ -266,7 +256,15 @@ No header da página principal **(main)** você deverá:
 Veja na imagem abaixo os ícones:
 ![](https://i.imgur.com/Njzp33e.png)
 
----
+## Como entregar?
+
+- [ ] Faça o fork desse repositório para o seu GitHub
+- [ ] Clone o seu repositório em sua máquina
+- [ ] Desenvolva seu projeto, fazendo commits a cada alteração e push
+- [ ] Crie um PR (pull request)
+- [ ] Envie o link do pull request que você criou na plataforma da Cubos
+
+### ⚠️ Importante: Se o pull request não for criado e enviado na plataforma o feedback não será fornecido e constará como não entregue
 
 **LEMBRE-SE**: é melhor feito do que perfeito, mas não faça mal feito!!!
 
