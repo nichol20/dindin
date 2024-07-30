@@ -1,0 +1,21 @@
+@use "../../styles/" as *;
+
+.inputField {
+    width: 100%;
+    @include mixins-display-flex(center, flex-start);
+    gap: 5px;
+    flex-direction: column;
+
+    > label {
+        font-size: 1rem;
+        text-transform: capitalize;
+    }
+
+    > input {
+        width: 100%;
+        padding: 18px 12px;
+        border: 1px solid $colors-primary-input-border;
+        border-radius: 4px;
+        font-size: 1rem;
+    }
+}

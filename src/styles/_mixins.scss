@@ -1,0 +1,13 @@
+@use "./colors";
+
+@mixin display-flex($justifyContent: center, $alignItems: center) {
+    display: flex;
+    justify-content: $justifyContent;
+    align-items: $alignItems;
+}
+
+@mixin primary-button() {
+    background-color: colors.$primary-btn-bg;
+    color: colors.$primary-txt;
+    border-radius: 4px;
+}

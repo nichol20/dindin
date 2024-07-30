@@ -1,0 +1,23 @@
+@use "../../styles/" as *;
+
+.header {
+    width: 100%;
+    padding: 40px 100px;
+
+}
+
+.logoBox {
+    @include mixins-display-flex(flex-start);
+    gap: 5px;
+
+    > img {
+        width: 45px;
+        height: 45px;
+    }
+
+    .appName {
+        font-size: 2.25rem;
+        font-weight: bold;
+        color: $colors-primary-txt;
+    }
+}
