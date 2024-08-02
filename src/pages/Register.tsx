@@ -6,7 +6,7 @@ import styles from '../styles/Register.module.scss'
 export default function RegisterPage() {
     return (
         <div className={styles.registerPage}>
-            <Header />
+            <Header/>
             <main>
                 <section className={styles.registerSection}>   
                     <h1>Cadastre-se</h1>
