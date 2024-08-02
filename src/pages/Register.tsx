@@ -1,7 +1,7 @@
 import { Header } from '../components/Header'
 import { InputField } from '../components/InputField'
-
 import styles from '../styles/Register.module.scss'
+
 
 export default function RegisterPage() {
     return (
