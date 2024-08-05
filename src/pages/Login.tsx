@@ -7,7 +7,7 @@ export default function LoginPage() {
     return (
         <div className={styles.loginPage}>
             <Header />
-            <main>
+            <main className={styles.content}>
                 <section className={styles.descriptionSection}>
                     <h2>Controle suas <span className={styles.highlightedTxt}>finanças</span>, sem planilha chata.</h2>
                     <p>Organizar as suas finanças nunca foi tão fácil, com o DINDIN, você tem tudo num único lugar e em um clique de distância.</p>

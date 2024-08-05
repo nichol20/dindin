@@ -1,0 +1,146 @@
+@use "." as *;
+
+.homePage {
+    width: 100%;
+    height: 100vh;
+    background: rgb(5,237,227);
+    background: linear-gradient(90deg, rgba(5,237,227,1) 0%, rgba(100,95,251,1) 100%);
+}
+
+.content {
+    background-color: $colors-primary-bg;
+    width: 100%;
+    height: 100%;
+    border-top-left-radius: 85px;
+    border-top-right-radius: 85px;
+    padding: 30px 100px;
+}
+
+.filterBtn {
+    padding: 8px 14px;
+    border-radius: 8px;
+    background-color: transparent;
+    @include mixins-light-box-shadow();
+    @include mixins-display-flex();
+    gap: 5px;
+    margin-bottom: 26px;
+
+    > img {
+        width: 14px;
+        height: 14px;
+    }
+
+    > span {
+        font-size: 0.75rem;
+        font-weight: bold;
+    }
+}
+
+section.finances {
+    @include mixins-display-flex(flex-start, flex-start);
+    gap: 34px;
+}
+
+.financesAside {
+    width: 236px;
+}
+
+.summary {
+    width: 100%;
+    padding: 26px 33px;
+    border-radius: 8px;
+    @include mixins-light-box-shadow();
+
+    > h3 {
+        font-size: 1.125rem;
+        margin-bottom: 23px;
+    }
+
+    .amountBox {
+        @include mixins-display-flex(space-between);
+        font-size: 0.813rem;
+        width: 100%;
+        margin-bottom: 10px;
+
+        > span:first-child {
+            font-weight: bold;
+        }
+    }
+
+    .amountBox.income {
+        > span:nth-child(2) {
+            color: $colors-income-txt;
+        }
+    }
+
+    .amountBox.expense {
+        > span:nth-child(2) {
+            color: $colors-expense-txt;
+        }
+    }
+
+    .amountBox.balance {
+        padding-top: 16px;
+        border-top: 1px solid $colors-stroke;
+        margin-bottom: 5px;
+
+        > span:first-child {
+            font-size: 0.875rem;
+        }
+
+        > span:nth-child(2) {
+            color: $colors-positive-balance;
+        }
+    }
+}
+
+.addRecordBtn {
+    @include mixins-primary-button();
+    width: 100%;
+    padding: 10px;
+    margin-top: 16px;
+}
+
+.addRecordForm {
+    @include mixins-display-flex();
+    flex-direction: column;
+    gap: 25px;
+    width: 100%;
+
+    .radioInput {
+        width: 100%;
+        @include mixins-display-flex();
+
+        > label {
+            display: block;
+            flex: 1;
+            height: 56px;
+            background-color: #B9B9B9;
+            @include mixins-display-flex();
+            border-radius: 4px;
+            transition: 150ms background ease-in-out;
+            color: $colors-primary-txt;
+            cursor: pointer;
+
+            &.incomeLabel:has(> input:checked) {
+                background-color: #3A9FF1;
+            }
+
+            &.expenseLabel:has(> input:checked) {
+                background-color: #FF576B;
+            }
+            
+            > input {
+                display: none;
+            }
+        }
+
+    }
+
+    .submitBtn {
+        @include mixins-primary-button();
+        padding: 10px 47px;
+        font-weight: 700;
+        font-size: 0.875rem;
+    }
+}
