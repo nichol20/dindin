@@ -3,6 +3,7 @@ import LoginPage from "./pages/Login";
 import RegisterPage from "./pages/Register";
 
 function App() {
+
   return (
     <BrowserRouter>
       <Routes>
@@ -11,6 +12,7 @@ function App() {
       </Routes>
     </BrowserRouter>
   )
+  
 }
 
 export default App
