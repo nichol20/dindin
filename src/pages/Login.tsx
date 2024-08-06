@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom'
 export default function LoginPage() {
     const navigate = useNavigate();
 
-    const handleSubmit = async (event:React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
         const formData = new FormData(event.currentTarget);
@@ -15,18 +15,18 @@ export default function LoginPage() {
         const email = formData.get('email') as string;
         const password = formData.get('password') as string;
 
-        if (password.length===0 || email.length===0) {
+        if (password.length === 0 || email.length === 0) {
             alert('Precisa preencher e-mail e senha.')
             return
         }
 
         try {
-            const responseLogin = await login(email,password);
-            localStorage.setItem('token',responseLogin.token);
+            const responseLogin = await login(email, password);
+            localStorage.setItem('token', responseLogin.token);
             navigate('/');
         } catch (error: any) {
             if (error.response.status === 400) {
-                alert ('Email ou senha incorreta.')
+                alert('Email ou senha incorreta.')
             }
         }
     };
