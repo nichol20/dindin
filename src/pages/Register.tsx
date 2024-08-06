@@ -42,7 +42,7 @@ export default function RegisterPage() {
         <div className={styles.registerPage}>
             <Header/>
             <main>
-                <section className={styles.registerSection}>   
+                <section className={styles.registerSection}>
                     <h1>Cadastre-se</h1>
                     <form className={styles.registerForm} onSubmit={handleSubmit}>
                         <InputField inputId='nome' name='nome' type='text'/>

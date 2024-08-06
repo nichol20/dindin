@@ -1,0 +1,61 @@
+@use "../../styles/" as *;
+
+.filters {
+    @include mixins-light-box-shadow();
+    width: 100%;
+    transition: 500ms all ease-in-out;
+    overflow: hidden;
+    max-height: 0px;
+    padding: 0px 30px;
+    margin-bottom: 0px;
+
+    &.active {
+        padding: 30px;
+        margin-bottom: 60px;
+        max-height: 1000px;
+    }
+}
+
+.categories {
+    height: 100%;
+}
+
+.title {
+    color: #B9B9B9;
+    font-size: 0.75rem;
+}
+
+.list {
+    margin-top: 20px;
+    display: grid;
+    grid-template-columns: repeat(3, 80px);
+    gap: 9px;
+    
+
+    > div {
+        width: 100%;
+        height: 20px;
+        @include mixins-light-box-shadow();
+        border-radius: 20px;
+        padding: 4px 10px;
+        font-size: 0.625rem;
+        @include mixins-display-flex(space-between);
+        cursor: pointer;
+    }
+}
+
+.actions {
+    margin-top: 18px;
+    @include mixins-display-flex(flex-start, center);
+    gap: 18px;
+
+    > button {
+        padding: 8px 10px;
+        font-size: 0.75rem;
+        border-radius: 8px;
+    }
+}
+
+.applyBtn {
+    @include mixins-primary-button();
+}
