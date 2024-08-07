@@ -1,10 +1,12 @@
 import { Header } from '../components/Header'
 import { InputField } from '../components/InputField'
-import { login } from '../utils/api'
 import styles from '../styles/Login.module.scss'
 import { useNavigate } from 'react-router-dom'
+import { useEffect } from 'react'
+import { useAuth } from '../contexts/AuthContext'
 
 export default function LoginPage() {
+    const { user, login } = useAuth();
     const navigate = useNavigate();
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -21,9 +23,7 @@ export default function LoginPage() {
         }
 
         try {
-            const responseLogin = await login(email, password);
-            localStorage.setItem('token', responseLogin.token);
-            navigate('/');
+            await login(email, password);
         } catch (error: any) {
             if (error.response.status === 400) {
                 alert('Email ou senha incorreta.')
@@ -31,6 +31,11 @@ export default function LoginPage() {
         }
     };
 
+    useEffect(() => {
+        if (user) {
+            navigate("/")
+        }
+    }, [user, navigate])
 
     return (
         <div className={styles.loginPage}>
@@ -39,7 +44,7 @@ export default function LoginPage() {
                 <section className={styles.descriptionSection}>
                     <h2>Controle suas <span className={styles.highlightedTxt}>finanças</span>, sem planilha chata.</h2>
                     <p>Organizar as suas finanças nunca foi tão fácil, com o DINDIN, você tem tudo num único lugar e em um clique de distância.</p>
-                    <button>Cadastre-se</button>
+                    <button onClick={() => navigate("/register")}>Cadastre-se</button>
                 </section>
                 <section className={styles.loginSection}>
                     <h1>Login</h1>

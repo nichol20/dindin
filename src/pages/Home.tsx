@@ -3,12 +3,12 @@ import { Header } from '../components/Header'
 
 import funnelIcon from '../assets/funnel.png'
 import styles from '../styles/Home.module.scss'
-import { Modal } from '../components/Modal'
-import { InputField, SelectField } from '../components/InputField'
 import { useState } from 'react'
 import { Filters } from '../components/Filters'
+import withAuth from '../hoc/withAuth'
+import { RecordForm } from '../components/RecordForm'
 
-export default function Home() {
+function Home() {
     const [showAddRecordForm, setShowAddRecordForm] = useState(false)
     const [showFilters, setShowFilters] = useState(false)
 
@@ -76,33 +76,17 @@ export default function Home() {
                         </div>
                         <button className={styles.addRecordBtn} onClick={() => setShowAddRecordForm(true)}>Adicionar Registro</button>
                         {showAddRecordForm &&
-                            <Modal close={() => setShowAddRecordForm(false)} title='Adicionar Registro'>
-                                <form className={styles.addRecordForm}>
-                                    <div className={styles.radioInput}>
-                                        <label className={styles.incomeLabel}>
-                                            Entrada
-                                            <input type="radio" name="financeType" value="entrada" defaultChecked />
-                                        </label>
-                                        <label className={styles.expenseLabel}>
-                                            Saída
-                                            <input type="radio" name="financeType" value="saída" />
-                                        </label>
-                                    </div>
-                                    <InputField inputId='value' name='valor' type='text' />
-                                    <SelectField selectId='category' name='categoria'>
-                                        <option value="volvo">Volvo</option>
-                                        <option value="saab">Saab</option>
-                                        <option value="opel">Opel</option>
-                                        <option value="audi">Audi</option>
-                                    </SelectField>
-                                    <InputField inputId='date' name='data' type='date' />
-                                    <InputField inputId='description' name='descrição' type='text' />
-                                    <button type="submit" className={styles.submitBtn}>Confirmar</button>
-                                </form>
-                            </Modal>}
+                            <RecordForm
+                                close={() => setShowAddRecordForm(false)}
+                                title='Adicionar Registro'
+                                onSubmit={() => { }}
+                            />
+                        }
                     </aside>
                 </section>
             </main>
         </div>
     )
 }
+
+export default withAuth(Home)
