@@ -3,6 +3,7 @@ import pencilIcon from '../../assets/pencil.png'
 import trashCanIcon from '../../assets/trash-can.png'
 import { ClosableComponent } from '../ClosableComponent'
 import styles from './style.module.scss'
+import { RecordForm } from '../RecordForm'
 
 export interface FinanceRowProps {
     date: string
@@ -15,6 +16,7 @@ export interface FinanceRowProps {
 
 export const FinanceRow = ({ category, date, description, value, weekday, type }: FinanceRowProps) => {
     const [showDeleteConfimationBox, setShowDeleteConfimationBox] = useState(false)
+    const [showEditRecordForm, setShowEditRecordForm] = useState(false)
 
     const closeDeleteConfimationBox = () => setShowDeleteConfimationBox(false)
 
@@ -35,7 +37,7 @@ export const FinanceRow = ({ category, date, description, value, weekday, type }
             <div className={`${styles.valueRow} ${styles.row}`}>
                 <span className={styles.content}>{value}</span>
             </div>
-            <button className={styles.editBtn}>
+            <button className={styles.editBtn} onClick={() => setShowEditRecordForm(true)}>
                 <img src={pencilIcon} alt="pencil" />
             </button>
             <div className={styles.removeBtnBox}>
@@ -54,6 +56,19 @@ export const FinanceRow = ({ category, date, description, value, weekday, type }
                     </div>
                 </ClosableComponent>
             </div>
+            {showEditRecordForm &&
+                <RecordForm
+                    close={() => setShowEditRecordForm(false)}
+                    title='Editar Registro'
+                    onSubmit={() => { }}
+                    record={{
+                        category: "volvo",
+                        date: "2009-09-11",
+                        description: "Dinheiro",
+                        type: 'expense',
+                        value: "R$100,00"
+                    }}
+                />}
         </div>
     )
 }

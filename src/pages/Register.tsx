@@ -3,8 +3,11 @@ import { InputField } from '../components/InputField'
 import { signUp } from '../utils/api'
 import styles from '../styles/Register.module.scss'
 import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../contexts/AuthContext'
+import { useEffect } from 'react'
 
 export default function RegisterPage() {
+    const { user } = useAuth();
     const navigate = useNavigate();
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -17,13 +20,10 @@ export default function RegisterPage() {
         const password1 = formData.get('senha') as string;
         const password2 = formData.get('confirmação de senha') as string;
 
-
         if (password1.length === 0 || email.length === 0 || name.length === 0) {
             alert('Precisa preencher nome, e-mail e senha.')
-
         }
         if (password1 != password2) {
-
             alert('A senha precisa ser digitada igualmente nos dois campos.')
         }
 
@@ -31,12 +31,18 @@ export default function RegisterPage() {
             await signUp(name, email, password1);
             navigate('/login');
 
-        } catch (error) {
-            alert('Algo deu errado.')
+        } catch (error: any) {
+            if (error.response.status === 400) {
+                alert('Esse email já existe.')
+            }
         }
-
     }
 
+    useEffect(() => {
+        if (user) {
+            navigate("/")
+        }
+    }, [user, navigate])
 
     return (
         <div className={styles.registerPage}>
