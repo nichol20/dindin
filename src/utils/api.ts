@@ -25,7 +25,7 @@ export const getUser = async (token: string): Promise<User> => {
     return res.data
 }
 
-interface Category {
+export interface Category {
     id: number,
     descricao: string
 }
@@ -47,7 +47,7 @@ interface CreateRecordParams {
     categoria_id: number
 }
 
-interface Record {
+export interface Record {
     id: number,
     tipo: 'entrada' | 'saida',
     descricao: string,
@@ -75,4 +75,20 @@ interface EditRecordParams {
 
 export const editRecord = async (id:number,params:EditRecordParams) => {
     await http.put(`/transacao/${id}`,params);
+};
+
+
+export const getRecords = async () => {
+    const res = await http.get<Record[]>("/transacao")
+    return res.data;
+};
+
+interface StatementSummary {
+    entrada: number,
+    saida: number
+}
+
+export const getStatementSummary = async () => {
+    const res = await http.get<StatementSummary>("/transacao/extrato")
+    return res.data;
 };

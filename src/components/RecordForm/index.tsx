@@ -1,6 +1,8 @@
+import { useEffect, useState } from 'react'
 import { InputField, SelectField } from '../InputField'
 import { Modal } from '../Modal'
 import styles from './style.module.scss'
+import { Category, getCategories } from '../../utils/api'
 
 interface Record {
     value: string
@@ -18,6 +20,21 @@ interface RecordFormProps {
 }
 
 export const RecordForm = ({ title, close, record, onSubmit }: RecordFormProps) => {
+    const [categories, setCategories] = useState<Category[]>([])
+
+    useEffect(()=> {
+        
+        const fetchCategories = async ()=>{
+
+            const categoriesReturn = await getCategories();
+            setCategories(categoriesReturn);
+        }
+
+        fetchCategories();
+
+    },[]);
+
+
     return (
         <Modal close={close} title={title}>
             <form className={styles.recordForm} onSubmit={onSubmit}>
@@ -43,10 +60,9 @@ export const RecordForm = ({ title, close, record, onSubmit }: RecordFormProps) 
                 </div>
                 <InputField inputId='value' name='valor' type='text' defaultValue={record?.value} />
                 <SelectField selectId='category' name='categoria'>
-                    <option value="volvo">Volvo</option>
-                    <option value="saab">Saab</option>
-                    <option value="opel">Opel</option>
-                    <option value="audi">Audi</option>
+                    {categories.map((category,index)=> {
+                        return <option value={category.descricao} key={index} selected={category.descricao===record?.category}>{category.descricao}</option>
+                    })}
                 </SelectField>
                 <InputField inputId='date' name='data' type='date' defaultValue={record?.date} />
                 <InputField inputId='description' name='descrição' type='text' defaultValue={record?.description} />

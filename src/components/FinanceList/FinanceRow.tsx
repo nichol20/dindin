@@ -11,7 +11,7 @@ export interface FinanceRowProps {
     description: string
     category: string
     value: string
-    type: "expense" | "income"
+    type: "saida" | "entrada"
 }
 
 export const FinanceRow = ({ category, date, description, value, weekday, type }: FinanceRowProps) => {
