@@ -3,14 +3,53 @@ import { Header } from '../components/Header'
 
 import funnelIcon from '../assets/funnel.png'
 import styles from '../styles/Home.module.scss'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Filters } from '../components/Filters'
 import withAuth from '../hoc/withAuth'
 import { RecordForm } from '../components/RecordForm'
+import { createRecord, getRecords } from '../utils/api'
+import { Record } from '../utils/api'
+import { formatDate, formatValue, getWeekDay } from '../utils/record'
 
 function Home() {
     const [showAddRecordForm, setShowAddRecordForm] = useState(false)
     const [showFilters, setShowFilters] = useState(false)
+    const [records, setRecords] = useState<Record[]>([])
+
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault()
+
+        const formData = new FormData(event.currentTarget);
+        const recordType = formData.get('financeType')as string;
+        const name = formData.get('nome')as string;
+        const category = formData.get('categoria') as string;
+        const value = formData.get('valor')as string;
+        const date = formData.get('data')as string;
+        const description = formData.get('descricao') as string;
+
+        await createRecord({
+            data:new Date(date).toISOString(),
+            descricao:
+
+        })
+
+    }
+
+    
+    useEffect(()=> {
+        
+        const fetchRecords = async ()=> {
+
+            const recordsReturn = await getRecords();
+            setRecords(recordsReturn);
+        }
+
+        fetchRecords();
+
+    },[]);
+
+
+
 
     return (
         <div className={styles.homePage}>
@@ -24,38 +63,15 @@ function Home() {
                     <div className={styles.listContainer}>
                         <Filters isOpen={showFilters} />
                         <FinanceList>
-                            <FinanceRow
-                                category='Pix'
-                                date='01/09/21'
-                                description='Venda dos brigadeiros dasodihsado isah doisahdoi sahdoi has dasphd pas dposajd poasjd posaj podajsop'
-                                value='R$100,00'
-                                weekday='Quarta'
-                                type='income'
-                            />
-                            <FinanceRow
-                                category='Lazer'
-                                date='02/09/21'
-                                description='-'
-                                value='R$59,50'
-                                weekday='Quinta'
-                                type='expense'
-                            />
-                            <FinanceRow
-                                category='Alimentação'
-                                date='03/09/21'
-                                description='-'
-                                value='R$12,50'
-                                weekday='Sexta'
-                                type='expense'
-                            />
-                            <FinanceRow
-                                category='Alimentação'
-                                date='06/09/21'
-                                description='Venda dos casadinhos'
-                                value='R$100,00'
-                                weekday='Segunda'
-                                type='income'
-                            />
+                            {records.map((record)=>
+                                <FinanceRow
+                                category={record.categoria_nome}
+                                date={formatDate(record.data)}
+                                description={record.descricao}
+                                value={formatValue(record.valor)}
+                                weekday={getWeekDay(record.data)}
+                                type={record.tipo}
+                            />)}
                         </FinanceList>
                     </div>
                     <aside className={styles.financesAside}>
@@ -79,7 +95,7 @@ function Home() {
                             <RecordForm
                                 close={() => setShowAddRecordForm(false)}
                                 title='Adicionar Registro'
-                                onSubmit={() => { }}
+                                onSubmit={handleSubmit}
                             />
                         }
                     </aside>
