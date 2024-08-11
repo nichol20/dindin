@@ -7,6 +7,14 @@
     gap: 5px;
     flex-direction: column;
 
+    .prefix {
+        height: 100%;
+        padding: 24px 0 0 20px;
+        position: absolute;
+        font-size: 1rem;
+        @include mixins-display-flex();
+    }
+
     > label {
         font-size: 1rem;
         
@@ -42,4 +50,8 @@
     transform: translateY(75%);
     z-index: 10;
     pointer-events: none;
+}
+
+.inputField:has(> .prefix) > input {
+    padding-left: 44px;
 }

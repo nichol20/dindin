@@ -3,7 +3,7 @@ export enum SessionStorageKeys {
 }
 
 export const getFromCache = <T>(cacheKey: string): T | null => {
-    const cachedData = window.sessionStorage.getItem(cacheKey);
+    const cachedData = sessionStorage.getItem(cacheKey);
 
     if (cachedData) {
         return JSON.parse(cachedData);
@@ -13,5 +13,9 @@ export const getFromCache = <T>(cacheKey: string): T | null => {
 };
 
 export const setToCache = (cacheKey: string, data: any) => {
-    window.sessionStorage.setItem(cacheKey, JSON.stringify(data));
+    sessionStorage.setItem(cacheKey, JSON.stringify(data));
 };
+
+export const removeFromCache = (cacheKey: string) => {
+    sessionStorage.removeItem(cacheKey)
+}

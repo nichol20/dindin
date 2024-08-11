@@ -2,38 +2,37 @@ import { useEffect, useState } from 'react'
 import { InputField, SelectField } from '../InputField'
 import { Modal } from '../Modal'
 import styles from './style.module.scss'
-import { Category, getCategories } from '../../utils/api'
-
-interface Record {
-    value: string
-    category: string
-    description: string
-    date: string
-    type: "income" | "expense"
-}
+import { getCategories } from '../../utils/api'
+import { Category, FinanceRecord } from '../../types/finance'
+import { formatToInputDate } from '../../utils/date'
+import { centsToReal } from '../../utils/money'
 
 interface RecordFormProps {
     title: string
     close: () => void
-    record?: Record
+    record?: FinanceRecord
     onSubmit: (event: React.FormEvent<HTMLFormElement>) => void
 }
 
 export const RecordForm = ({ title, close, record, onSubmit }: RecordFormProps) => {
     const [categories, setCategories] = useState<Category[]>([])
 
-    useEffect(()=> {
-        
-        const fetchCategories = async ()=>{
+    const handleMoneyInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const currentValue = event.target.value
+        if (currentValue.split(".")[1]?.length > 2) {
+            event.target.value = parseFloat(currentValue).toFixed(2)
+        }
+    }
 
-            const categoriesReturn = await getCategories();
-            setCategories(categoriesReturn);
+    useEffect(() => {
+        const fetchCategories = async () => {
+
+            const categoriesReturn = await getCategories()
+            setCategories(categoriesReturn)
         }
 
-        fetchCategories();
-
-    },[]);
-
+        fetchCategories()
+    }, [])
 
     return (
         <Modal close={close} title={title}>
@@ -45,7 +44,7 @@ export const RecordForm = ({ title, close, record, onSubmit }: RecordFormProps) 
                             type="radio"
                             name="financeType"
                             value="entrada"
-                            defaultChecked={record ? record?.type === "expense" : true}
+                            defaultChecked={record ? record?.tipo === "entrada" : true}
                         />
                     </label>
                     <label className={styles.expenseLabel}>
@@ -53,19 +52,46 @@ export const RecordForm = ({ title, close, record, onSubmit }: RecordFormProps) 
                         <input
                             type="radio"
                             name="financeType"
-                            value="saída"
-                            defaultChecked={record?.type === "income"}
+                            value="saida"
+                            defaultChecked={record?.tipo === "saida"}
                         />
                     </label>
                 </div>
-                <InputField inputId='value' name='valor' type='text' defaultValue={record?.value} />
-                <SelectField selectId='category' name='categoria'>
-                    {categories.map((category,index)=> {
-                        return <option value={category.descricao} key={index} selected={category.descricao===record?.category}>{category.descricao}</option>
+                <InputField
+                    inputId='value'
+                    title='valor'
+                    name="value"
+                    type='number'
+                    min='0.01'
+                    step='0.01'
+                    defaultValue={record ? centsToReal(record.valor, false) : 0.01}
+                    prefix='R$'
+                    onChange={handleMoneyInputChange}
+                />
+                <SelectField selectId='category' title='categoria' name="category" defaultValue={1}>
+                    {categories.map(category => {
+                        return <option
+                            value={category.id}
+                            key={category.id}
+                            selected={category.descricao === record?.categoria_nome}>
+                            {category.descricao}
+                        </option>
                     })}
                 </SelectField>
-                <InputField inputId='date' name='data' type='date' defaultValue={record?.date} />
-                <InputField inputId='description' name='descrição' type='text' defaultValue={record?.description} />
+                <InputField
+                    inputId='date'
+                    title='data'
+                    name="date"
+                    type='date'
+                    defaultValue={formatToInputDate(record?.data ?? "")}
+                />
+                <InputField
+                    inputId='description'
+                    title='descrição'
+                    name="description"
+                    type='text'
+                    defaultValue={record?.descricao}
+                />
                 <button type="submit" className={styles.submitBtn}>Confirmar</button>
             </form>
         </Modal>

@@ -5,51 +5,79 @@ import funnelIcon from '../assets/funnel.png'
 import styles from '../styles/Home.module.scss'
 import { useEffect, useState } from 'react'
 import { Filters } from '../components/Filters'
-import withAuth from '../hoc/withAuth'
 import { RecordForm } from '../components/RecordForm'
-import { createRecord, getRecords } from '../utils/api'
-import { Record } from '../utils/api'
-import { formatDate, formatValue, getWeekDay } from '../utils/record'
+import { createRecord, getRecords, getStatementSummary } from '../utils/api'
+import { centsToReal, realToCents } from '../utils/money'
+import { FinanceRecord, FinanceType, StatementSummary } from '../types/finance'
+import { useAuth } from '../contexts/AuthContext'
+import { useNavigate } from 'react-router-dom'
 
-function Home() {
+export default function Home() {
+    const { user } = useAuth()
+    const navigate = useNavigate()
     const [showAddRecordForm, setShowAddRecordForm] = useState(false)
     const [showFilters, setShowFilters] = useState(false)
-    const [records, setRecords] = useState<Record[]>([])
+    const [records, setRecords] = useState<FinanceRecord[]>([])
+    const [statementSummary, setStatementSummary] = useState<StatementSummary | null>(null)
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault()
 
         const formData = new FormData(event.currentTarget);
-        const recordType = formData.get('financeType')as string;
-        const name = formData.get('nome')as string;
-        const category = formData.get('categoria') as string;
-        const value = formData.get('valor')as string;
-        const date = formData.get('data')as string;
-        const description = formData.get('descricao') as string;
+        const financeType = formData.get('financeType') as FinanceType;
+        const category = formData.get('category') as string;
+        const value = formData.get('value') as string;
+        const date = formData.get('date') as string;
+        const description = formData.get('description') as string;
 
-        await createRecord({
-            data:new Date(date).toISOString(),
-            descricao:
-
-        })
-
-    }
-
-    
-    useEffect(()=> {
-        
-        const fetchRecords = async ()=> {
-
-            const recordsReturn = await getRecords();
-            setRecords(recordsReturn);
+        for (const pair of formData.entries()) {
+            const isFieldEmpty = (pair[1] as string).length === 0
+            if (isFieldEmpty) {
+                alert("Todos os campos são obrigatórios")
+                return
+            }
         }
 
-        fetchRecords();
+        try {
+            await createRecord({
+                data: new Date(date).toISOString(),
+                descricao: description,
+                valor: realToCents(value),
+                categoria_id: parseInt(category),
+                tipo: financeType
+            })
+            setShowAddRecordForm(false)
+            refreshRecords()
+        } catch (error: any) {
+            console.log(error)
+            alert("algo deu errado!")
+        }
+    }
 
-    },[]);
+    const getTotal = () => {
+        if (statementSummary) {
+            return statementSummary.entrada - statementSummary.saida
+        }
 
+        return 0
+    }
 
+    const refreshRecords = async () => {
+        const r = await getRecords();
+        setRecords(r);
+        const ss = await getStatementSummary()
+        setStatementSummary(ss)
+    }
 
+    useEffect(() => {
+        refreshRecords()
+    }, [])
+
+    useEffect(() => {
+        if (!user) {
+            navigate("/login")
+        }
+    }, [user, navigate])
 
     return (
         <div className={styles.homePage}>
@@ -63,15 +91,7 @@ function Home() {
                     <div className={styles.listContainer}>
                         <Filters isOpen={showFilters} />
                         <FinanceList>
-                            {records.map((record)=>
-                                <FinanceRow
-                                category={record.categoria_nome}
-                                date={formatDate(record.data)}
-                                description={record.descricao}
-                                value={formatValue(record.valor)}
-                                weekday={getWeekDay(record.data)}
-                                type={record.tipo}
-                            />)}
+                            {records.map((record) => <FinanceRow key={record.id} record={record} refreshRecords={refreshRecords} />)}
                         </FinanceList>
                     </div>
                     <aside className={styles.financesAside}>
@@ -79,15 +99,15 @@ function Home() {
                             <h3>Resumo</h3>
                             <div className={`${styles.amountBox} ${styles.income}`}>
                                 <span>Entradas</span>
-                                <span>R$200,00</span>
+                                <span>{statementSummary ? centsToReal(statementSummary.entrada, true) : "R$0,00"}</span>
                             </div>
                             <div className={`${styles.amountBox} ${styles.expense}`}>
                                 <span>Saídas</span>
-                                <span>R$70,50</span>
+                                <span>{statementSummary ? centsToReal(statementSummary.saida, true) : "R$0,00"}</span>
                             </div>
                             <div className={`${styles.amountBox} ${styles.balance}`}>
                                 <span>Saldo</span>
-                                <span>R$129,50</span>
+                                <span>{centsToReal(getTotal(), true)}</span>
                             </div>
                         </div>
                         <button className={styles.addRecordBtn} onClick={() => setShowAddRecordForm(true)}>Adicionar Registro</button>
@@ -104,5 +124,3 @@ function Home() {
         </div>
     )
 }
-
-export default withAuth(Home)

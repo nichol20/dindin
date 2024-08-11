@@ -49,8 +49,8 @@ export default function LoginPage() {
                 <section className={styles.loginSection}>
                     <h1>Login</h1>
                     <form className={styles.loginForm} onSubmit={handleSubmit}>
-                        <InputField inputId='email' name='email' type='email' />
-                        <InputField inputId='password' name='password' type='password' />
+                        <InputField inputId='email' title='e-mail' name="email" type='email' />
+                        <InputField inputId='password' title='password' name="password" type='password' />
                         <button className={styles.submitBtn}>Entrar</button>
                     </form>
                 </section>

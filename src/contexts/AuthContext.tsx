@@ -2,14 +2,16 @@ import { createContext, useContext, useEffect, useState } from "react";
 
 import { User } from "../types/user";
 import * as api from '../utils/api'
-import { getFromCache, SessionStorageKeys, setToCache } from "../utils/sessionStorage";
+import { getFromCache, removeFromCache, SessionStorageKeys, setToCache } from "../utils/sessionStorage";
 import { useNavigate } from "react-router-dom";
+import { http } from "../utils/http";
 
 interface AuthContext {
     user: User | null
     token: string | null
     login: (email: string, password: string) => Promise<void>,
     signUp: (username: string, email: string, password: string) => Promise<void>,
+    logout: () => void
 }
 
 interface AuthProviderProps {
@@ -40,6 +42,12 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         navigate("/login")
     }
 
+    const logout = () => {
+        removeFromCache(SessionStorageKeys.TOKEN)
+        setUser(null)
+        navigate("/login")
+    }
+
     useEffect(() => {
         const refreshUser = async () => {
             try {
@@ -60,10 +68,36 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         refreshUser()
     }, [])
 
+    useEffect(() => {
+        const requestIntercept = http.interceptors.request.use(
+            config => {
+                if (!config.headers.Authorization) {
+                    config.headers.Authorization = `Bearer ${token}`
+                }
+                return config
+            }, (error) => Promise.reject(error)
+        )
+
+        const responseIntercept = http.interceptors.response.use(
+            response => response,
+            async error => {
+                if (error?.response?.status === 403 || error?.response?.status === 401) {
+                    navigate("/login")
+                }
+                return Promise.reject(error)
+            }
+        )
+
+        return () => {
+            http.interceptors.request.eject(requestIntercept)
+            http.interceptors.response.eject(responseIntercept)
+        }
+    }, [token, navigate])
+
     if (isLoading) return <>Loading...</>
 
     return (
-        <AuthContext.Provider value={{ user, token, login, signUp }}>
+        <AuthContext.Provider value={{ user, token, login, signUp, logout }}>
             {children}
         </AuthContext.Provider>
     )

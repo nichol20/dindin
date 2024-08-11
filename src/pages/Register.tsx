@@ -15,10 +15,10 @@ export default function RegisterPage() {
 
         const formData = new FormData(event.currentTarget);
 
-        const name = formData.get('nome') as string;
+        const name = formData.get('name') as string;
         const email = formData.get('email') as string;
-        const password1 = formData.get('senha') as string;
-        const password2 = formData.get('confirmação de senha') as string;
+        const password1 = formData.get('password1') as string;
+        const password2 = formData.get('password2') as string;
 
         if (password1.length === 0 || email.length === 0 || name.length === 0) {
             alert('Precisa preencher nome, e-mail e senha.')
@@ -51,10 +51,10 @@ export default function RegisterPage() {
                 <section className={styles.registerSection}>
                     <h1>Cadastre-se</h1>
                     <form className={styles.registerForm} onSubmit={handleSubmit}>
-                        <InputField inputId='nome' name='nome' type='text' />
-                        <InputField inputId='email' name='email' type='email' />
-                        <InputField inputId='password1' name='senha' type='password' />
-                        <InputField inputId='password2' name='confirmação de senha' type='password' />
+                        <InputField inputId='nome' title='nome' name="name" type='text' />
+                        <InputField inputId='email' title='e-mail' name="email" type='email' />
+                        <InputField inputId='password1' title='senha' name="password1" type='password' />
+                        <InputField inputId='password2' title='confirmação de senha' name="password2" type='password' />
                         <button className={styles.submitBtn}>Cadastrar</button>
                     </form>
 
