@@ -41,13 +41,9 @@
 .inputField:has(> select)::after {
     content: "";
     position: absolute;
-    width: 0px;
-    height: 0px;
-    border-style: solid;
-    border-width: 10px 8px 0 8px;
-    border-color: #000000 transparent transparent transparent;
+    @include mixins-triangle(16px, 10px, #000000);
     inset: 50% 20px auto auto;
-    transform: translateY(75%);
+    transform: translateY(75%) rotate(180deg);
     z-index: 10;
     pointer-events: none;
 }

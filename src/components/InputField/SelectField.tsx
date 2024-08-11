@@ -6,14 +6,14 @@ interface SelectFieldProps {
     name: string
     selectId: string
     children: ReactNode
-    defaultValue?: string | number | readonly string[]
+    value?: string | number | readonly string[]
 }
 
-export const SelectField = ({ children, name, title, selectId, defaultValue }: SelectFieldProps) => {
+export const SelectField = ({ children, name, title, selectId, value }: SelectFieldProps) => {
     return (
         <div className={styles.inputField}>
             <label htmlFor={selectId}>{title}</label>
-            <select name={name} id={selectId} defaultValue={defaultValue}>
+            <select name={name} id={selectId} value={value}>
                 {children}
             </select>
         </div>

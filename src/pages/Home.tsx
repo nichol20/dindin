@@ -1,4 +1,4 @@
-import { FinanceList, FinanceRow } from '../components/FinanceList'
+import { FinanceList, FinanceRow, Order, OrderType } from '../components/FinanceList'
 import { Header } from '../components/Header'
 
 import funnelIcon from '../assets/funnel.png'
@@ -11,6 +11,7 @@ import { centsToReal, realToCents } from '../utils/money'
 import { FinanceRecord, FinanceType, StatementSummary } from '../types/finance'
 import { useAuth } from '../contexts/AuthContext'
 import { useNavigate } from 'react-router-dom'
+import { sortRecordsByDate, sortRecordsByValue } from '../utils/finance'
 
 export default function Home() {
     const { user } = useAuth()
@@ -54,6 +55,34 @@ export default function Home() {
         }
     }
 
+    const applyFilters = async (categories: string[]) => {
+        if (categories.length > 0) {
+            const records = await getRecords();
+            const newRecords = records.filter(r => categories.includes(r.categoria_nome))
+            setRecords(newRecords)
+            let income = 0, expense = 0
+            newRecords.forEach(r => r.tipo === "entrada" ? income += r.valor : expense += r.valor)
+            setStatementSummary({
+                entrada: income,
+                saida: expense
+            })
+            return
+        }
+
+        refreshRecords()
+    }
+
+    const handleOrderChange = (order: Order, type: OrderType) => {
+        if (order === "date") {
+            const sortedRecords = sortRecordsByDate(records, type)
+            setRecords([...sortedRecords])
+        }
+        if (order === "value") {
+            const sortedRecords = sortRecordsByValue(records, type)
+            setRecords([...sortedRecords])
+        }
+    }
+
     const getTotal = () => {
         if (statementSummary) {
             return statementSummary.entrada - statementSummary.saida
@@ -63,10 +92,11 @@ export default function Home() {
     }
 
     const refreshRecords = async () => {
-        const r = await getRecords();
-        setRecords(r);
-        const ss = await getStatementSummary()
-        setStatementSummary(ss)
+        const records = await getRecords();
+        const sortedRecords = sortRecordsByDate(records, "ascendant")
+        setRecords(sortedRecords);
+        const summary = await getStatementSummary()
+        setStatementSummary(summary)
     }
 
     useEffect(() => {
@@ -89,8 +119,8 @@ export default function Home() {
                 </button>
                 <section className={styles.finances}>
                     <div className={styles.listContainer}>
-                        <Filters isOpen={showFilters} />
-                        <FinanceList>
+                        <Filters isOpen={showFilters} applyFilters={applyFilters} />
+                        <FinanceList onOrderChange={handleOrderChange}>
                             {records.map((record) => <FinanceRow key={record.id} record={record} refreshRecords={refreshRecords} />)}
                         </FinanceList>
                     </div>

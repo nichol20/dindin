@@ -68,12 +68,17 @@ export const RecordForm = ({ title, close, record, onSubmit }: RecordFormProps) 
                     prefix='R$'
                     onChange={handleMoneyInputChange}
                 />
-                <SelectField selectId='category' title='categoria' name="category" defaultValue={1}>
+                <SelectField
+                    selectId='category'
+                    title='categoria'
+                    name="category"
+                    value={record ? record.categoria_id : 1}
+                >
                     {categories.map(category => {
                         return <option
                             value={category.id}
                             key={category.id}
-                            selected={category.descricao === record?.categoria_nome}>
+                        >
                             {category.descricao}
                         </option>
                     })}

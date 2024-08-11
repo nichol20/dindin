@@ -9,6 +9,7 @@
 .logoBox {
     @include mixins-display-flex(flex-start);
     gap: 5px;
+    user-select: none;
 
     > img {
         width: 45px;
@@ -24,6 +25,7 @@
 
 .userBox {
     @include mixins-display-flex();
+    user-select: none;
 
     .editBtn {
         background-color: transparent;

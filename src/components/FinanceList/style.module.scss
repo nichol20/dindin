@@ -29,6 +29,10 @@
 }
 
 .col {
+    position: relative;
+    @include mixins-display-flex();
+    gap: 10px;
+    user-select: none;
 
     &:not(:first-child) {
         text-align: center;
@@ -38,6 +42,23 @@
         font-size: .875rem;
         font-weight: bold;
     }
+
+    .triangle {
+        content: "";
+        @include mixins-triangle(8px, 5px,#3A9FF1);
+
+        &.descendant {
+            transform: rotate(180deg);
+        }
+    }
+}
+
+.dateCol {
+    justify-content: flex-start;
+}
+
+.dateCol, .valueCol {
+    cursor: pointer;
 }
 
 .rows {
@@ -101,11 +122,7 @@
     &::after {
         content: "";
         position: absolute;
-        width: 0px;
-        height: 0px;
-        border-style: solid;
-        border-width: 0 8.5px 13px 8.5px;
-        border-color: transparent transparent #E4F2FD transparent;
+        @include mixins-triangle(17px, 13px, #E4F2FD);
         inset: auto 5px 46px auto;
         z-index: 10;
     }

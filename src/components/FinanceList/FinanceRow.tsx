@@ -54,9 +54,10 @@ export const FinanceRow = ({ record, refreshRecords }: FinanceRowProps) => {
         }
     }
 
-    const handleRecordDeletion = () => {
+    const handleRecordDeletion = async () => {
         closeDeleteConfimationBox()
-        deleteRecord(record.id)
+        await deleteRecord(record.id)
+        refreshRecords()
     }
 
 
