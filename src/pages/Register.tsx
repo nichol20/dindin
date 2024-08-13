@@ -22,9 +22,11 @@ export default function RegisterPage() {
 
         if (password1.length === 0 || email.length === 0 || name.length === 0) {
             alert('Precisa preencher nome, e-mail e senha.')
+            return
         }
-        if (password1 != password2) {
+        if (password1 !== password2) {
             alert('A senha precisa ser digitada igualmente nos dois campos.')
+            return
         }
 
         try {
@@ -33,8 +35,10 @@ export default function RegisterPage() {
 
         } catch (error: any) {
             if (error.response.status === 400) {
-                alert('Esse email já existe.')
+                alert(error.response.data.mensagem)
+                return
             }
+            alert("Algo deu errado.")
         }
     }
 

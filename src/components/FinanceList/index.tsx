@@ -15,7 +15,7 @@ const FinanceList = ({ children, onOrderChange }: FinanceListProps) => {
     const [orderBy, setOrderBy] = useState<Order>("date")
     const [orderType, setOrderType] = useState<OrderType>("ascendant")
 
-    const handleDateClick = (order: Order) => {
+    const handleClick = (order: Order) => {
         if (order === orderBy) {
             setOrderType(prev => {
                 let newOrderType: OrderType = prev
@@ -35,7 +35,7 @@ const FinanceList = ({ children, onOrderChange }: FinanceListProps) => {
             <div className={styles.header}>
                 <div
                     className={`${styles.dateCol} ${styles.col}`}
-                    onClick={() => handleDateClick("date")}
+                    onClick={() => handleClick("date")}
                 >
                     <span className={styles.content}>Data</span>
                     {orderBy === "date" && <div className={`${styles.triangle} ${styles[orderType]}`}></div>}
@@ -51,7 +51,7 @@ const FinanceList = ({ children, onOrderChange }: FinanceListProps) => {
                 </div>
                 <div
                     className={`${styles.valueCol} ${styles.col}`}
-                    onClick={() => handleDateClick("value")}
+                    onClick={() => handleClick("value")}
                 >
                     <span className={styles.content}>Valor</span>
                     {orderBy === "value" && <div className={`${styles.triangle} ${styles[orderType]}`}></div>}
