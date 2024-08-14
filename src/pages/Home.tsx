@@ -1,17 +1,17 @@
-import { FinanceList, FinanceRow, Order, OrderType } from '../components/FinanceList'
+import { FinanceList, FinanceRow } from '../components/FinanceList'
 import { Header } from '../components/Header'
 
 import funnelIcon from '../assets/funnel.png'
 import styles from '../styles/Home.module.scss'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { Filters } from '../components/Filters'
 import { RecordForm } from '../components/RecordForm'
 import { createRecord, getRecords, getStatementSummary } from '../utils/api'
 import { centsToReal, realToCents } from '../utils/money'
-import { FinanceRecord, FinanceType, StatementSummary } from '../types/finance'
+import { FinanceRecord, FinanceType, Order, OrderType, StatementSummary } from '../types/finance'
 import { useAuth } from '../contexts/AuthContext'
 import { useNavigate } from 'react-router-dom'
-import { sortRecordsByDate, sortRecordsByValue } from '../utils/finance'
+import { sortRecords } from '../utils/finance'
 
 export default function Home() {
     const { user } = useAuth()
@@ -20,6 +20,8 @@ export default function Home() {
     const [showFilters, setShowFilters] = useState(false)
     const [records, setRecords] = useState<FinanceRecord[]>([])
     const [statementSummary, setStatementSummary] = useState<StatementSummary | null>(null)
+    const [orderBy, setOrderBy] = useState<Order>("date")
+    const [orderType, setOrderType] = useState<OrderType>("ascendant")
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault()
@@ -73,14 +75,23 @@ export default function Home() {
     }
 
     const handleOrderChange = (order: Order, type: OrderType) => {
-        if (order === "date") {
-            const sortedRecords = sortRecordsByDate(records, type)
-            setRecords([...sortedRecords])
+        const sortedRecords = sortRecords(records, order, type)
+        setRecords([...sortedRecords])
+    }
+
+    const changeOrder = (order: Order) => {
+        if (order === orderBy) {
+            setOrderType(prev => {
+                let newOrderType = prev
+                newOrderType = prev === "ascendant" ? "descendant" : "ascendant"
+                handleOrderChange(order, newOrderType)
+                return newOrderType
+            })
+            return
         }
-        if (order === "value") {
-            const sortedRecords = sortRecordsByValue(records, type)
-            setRecords([...sortedRecords])
-        }
+
+        handleOrderChange(order, orderType)
+        setOrderBy(order)
     }
 
     const getTotal = () => {
@@ -91,17 +102,17 @@ export default function Home() {
         return 0
     }
 
-    const refreshRecords = async () => {
+    const refreshRecords = useCallback(async () => {
         const records = await getRecords();
-        const sortedRecords = sortRecordsByDate(records, "ascendant")
+        const sortedRecords = sortRecords(records, orderBy, orderType)
         setRecords(sortedRecords);
         const summary = await getStatementSummary()
         setStatementSummary(summary)
-    }
+    }, [orderBy, orderType])
 
     useEffect(() => {
         refreshRecords()
-    }, [])
+    }, [refreshRecords])
 
     useEffect(() => {
         if (!user) {
@@ -120,7 +131,7 @@ export default function Home() {
                 <section className={styles.finances}>
                     <div className={styles.listContainer}>
                         <Filters isOpen={showFilters} applyFilters={applyFilters} />
-                        <FinanceList onOrderChange={handleOrderChange}>
+                        <FinanceList changeOrder={changeOrder} orderBy={orderBy} orderType={orderType}>
                             {records.map((record) => <FinanceRow key={record.id} record={record} refreshRecords={refreshRecords} />)}
                         </FinanceList>
                     </div>

@@ -20,3 +20,6 @@ export interface StatementSummary {
     entrada: number,
     saida: number
 }
+
+export type Order = "date" | "value" | "category" | "description"
+export type OrderType = "ascendant" | "descendant"
